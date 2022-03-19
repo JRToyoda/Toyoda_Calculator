@@ -25,6 +25,6 @@
 
     <string name="backspace"> </string>
     
-    <string name="input">0</string>
+    <string name="input">""</string>
 
 </resources>
