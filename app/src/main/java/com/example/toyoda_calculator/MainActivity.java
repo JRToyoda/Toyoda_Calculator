@@ -3,10 +3,16 @@ package com.example.toyoda_calculator;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.mariuszgromada.math.mxparser.*;
+
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,10 +22,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        Objects.requireNonNull(getSupportActionBar()).hide();
+        setContentView(R.layout.activity_main);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        //EditText
         input = findViewById(R.id.input);
         input.setShowSoftInputOnFocus(false);
 
+        //OnClickListener
         input.setOnClickListener(view -> {
             if (getString(R.string.input).equals(input.getText().toString())) {
                 input.setText("");
@@ -41,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         input.setSelection(pos + 1);
     }
 
+    // display number
     public void zero(View view) {
         display("0");
     }
@@ -88,12 +102,12 @@ public class MainActivity extends AppCompatActivity {
     public void equal(View view) {
         String xp = input.getText().toString();
 
-        xp = xp.replaceAll("÷", "/");
-        xp = xp.replaceAll("×", "*");
+        xp = xp.replaceAll("÷", "/"); // replaces symbol to what java can understand
+        xp = xp.replaceAll("×", "*"); // replaces symbol to what java can understand
 
         Expression exp = new Expression(xp);
 
-        String answer = String.valueOf(exp.calculate());
+        String answer = String.valueOf(exp.calculate()); //uses mx parser to calculate
 
         input.setText(answer);
         input.setSelection(answer.length());
@@ -135,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         int pos = input.getSelectionStart();
         int length = input.getText().length();
 
-        if (pos != 0 && length != 0) {
+        if (pos != 0 && length != 0) { //checks if there is any symbols to delete
             SpannableStringBuilder selection = (SpannableStringBuilder) input.getText();
             selection.replace(pos - 1, pos, "");
             input.setText(selection);
